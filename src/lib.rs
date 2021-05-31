@@ -94,6 +94,18 @@ impl<'pest, Rule: RuleType, T: FromPest<'pest, Rule = Rule>> FromPest<'pest> for
     }
 }
 
+/// For borrowed types.
+impl<'pest, Rule: RuleType, T: FromPest<'pest, Rule = Rule>> FromPest<'pest> for &T {
+    type Rule = Rule;
+    type FatalError = T::FatalError;
+    fn from_pest(pest: &mut Pairs<'pest, Rule>) -> Result<Self, ConversionError<T::FatalError>> {
+        match T::from_pest(pest) {
+            Err(e) => Err(e),
+            Result(r) => Result(&r),
+        }
+    }
+}
+
 /// Convert an optional production.
 impl<'pest, Rule: RuleType, T: FromPest<'pest, Rule = Rule>> FromPest<'pest> for Option<T> {
     type Rule = Rule;
