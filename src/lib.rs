@@ -101,7 +101,7 @@ impl<'pest, Rule: RuleType, T: FromPest<'pest, Rule = Rule>> FromPest<'pest> for
     fn from_pest(pest: &mut Pairs<'pest, Rule>) -> Result<Self, ConversionError<T::FatalError>> {
         match T::from_pest(pest) {
             Err(e) => Err(e),
-            Result(r) => Result(&r),
+            Ok(r) => Ok(&r),
         }
     }
 }
